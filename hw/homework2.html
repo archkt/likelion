@@ -29,13 +29,25 @@
     }
   </style>
   <script>
-    function alert_submit() {
-      alert("주문이 완료되었습니다.")
+    function check_submit() {
+      input_name = $('#input_name').val()
+      input_quantity = $('#input_quantity').val()
+      input_address = $('#input_address').val()
+      input_phone = $('#input_phone').val()
+
+      if (!input_name) {
+        alert("이름을 입력하세요")
+      } else if (!input_quantity) {
+        alert("수량을 입력하세요")
+      } else if (!input_address) {
+        alert("주소를 입력하세요")
+      } else if (!input_phone) {
+        alert("전화번호를 입력하세요")
+      } else {
+        alert("주문이 완료되었습니다.")
+      }
     }
 
-    function alert_empty_form() {
-      alert("")
-    }
   </script>
 
 </head>
@@ -102,7 +114,7 @@
     </div>
 
     <!-- submit button-->
-    <input style="text-align: center;" class="btn btn-primary" type="submit" value="Submit" onclick="alert_submit()">
+    <input style="text-align: center;" class="btn btn-primary" type="submit" value="Submit" onclick="check_submit()">
 
 
 

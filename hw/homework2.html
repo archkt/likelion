@@ -15,6 +15,8 @@
 
   <title>Selling computer</title>
 
+
+  <!-- style -->
   <style>
     .wrap {
       margin: 10px auto;
@@ -27,7 +29,15 @@
       font-family: 'Cute Font', cursive;
       font-size: 16px;
     }
+
+    .exchange_rate {
+      color: blue;
+      font-weight: bold;
+    }
   </style>
+
+  <!-- JS -->
+
   <script>
     function check_submit() {
       input_name = $('#input_name').val()
@@ -68,6 +78,10 @@
     <p>
       Yes, you're right. It's thirty-five thousand dollars. I guess you have to sell one of your kidneys.
     </p>
+  </div>
+  
+  <div>
+    <h5 id="exchange_rate" class='exchange_rate'> </h5>
   </div>
 
   <div class="wrap">

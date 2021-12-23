@@ -13,6 +13,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
 
+  
+
   <title>Selling computer</title>
 
 
@@ -56,35 +58,52 @@
       } else {
         alert("주문이 완료되었습니다.")
       }
+    };
+
+    function show_exchange() {
+      //ajax
+      $.ajax({
+        type: 'GET',
+        url: 'https://api.manana.kr/exchange/rate.json',
+        data: {},
+        success: function (response) {
+          console.log('hi');
+          $('#exchange_rate').text("달러-원 환율: " + response[1]['rate']);
+        }
+      })
     }
+
 
   </script>
 
 </head>
 
-<body>
+<body onload="show_exchange()">
 
   <!-- picture with description -->
   <div>
 
   </div>
   <div style="text-align: center;">
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPs2GZpY0ZmSAlSEpIoBNezojwml2X4crfvw&usqp=CAU" class="img-fluid" alt="Responsive image">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPs2GZpY0ZmSAlSEpIoBNezojwml2X4crfvw&usqp=CAU"
+      class="img-fluid" alt="Responsive image">
   </div>
 
   <div id="description" style="text-align: center;">
     <h1>Selling computer</h1>
     <h2>price: $35,000</h2>
     <p>
-      Yes, you're right. It's thirty-five thousand dollars. I guess you have to sell one of your kidneys.
+    <h5>Yes, you're right. It's thirty-five thousand dollars. I guess you have to sell one of your kidneys.</h5>
     </p>
   </div>
-  
-  <div>
-    <h5 id="exchange_rate" class='exchange_rate'> </h5>
-  </div>
+
 
   <div class="wrap">
+    <!-- exchange rate -->
+    <div>
+      <h5 id="exchange_rate" class='exchange_rate'></h5>
+    </div>
+
     <br>
     <!-- 주문자 이름 -->
     <div class="input-group mb-3">
@@ -113,7 +132,7 @@
       <div class="input-group-prepend">
         <span class="input-group-text" id="basic-addon1">주소</span>
       </div>
-      <input id="input_address" type="text" class="form-control" placeholder="Username" aria-label="Username"
+      <input id="input_address" type="text" class="form-control" placeholder="address" aria-label="Username"
         aria-describedby="basic-addon1">
     </div>
 
@@ -122,14 +141,12 @@
       <div class="input-group-prepend">
         <span class="input-group-text" id="basic-addon1">전화번호</span>
       </div>
-      <input id="input_phone" type="text" class="form-control" placeholder="Username" aria-label="Username"
+      <input id="input_phone" type="text" class="form-control" placeholder="phone number" aria-label="Username"
         aria-describedby="basic-addon1">
     </div>
 
     <!-- submit button-->
     <input style="text-align: center;" class="btn btn-primary" type="submit" value="Submit" onclick="check_submit()">
-
-
 
   </div>
 
@@ -145,6 +162,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </body>
 
 </html>

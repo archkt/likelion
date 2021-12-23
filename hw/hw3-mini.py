@@ -9,10 +9,13 @@ soup = BeautifulSoup(data.text, 'html.parser')
 movies = soup.select('#old_content > table > tbody > tr')
 for movie in movies:
     # movie 안에 a 가 있으면,
+    a_tag = movie.select_one('td.title > div > a')
 
-    rank = movie.select_one("td.ac > img['alt']")
-    title = movie.select_one("td.title > div > a")
-    print(rank)
+    if a_tag is not None:
+        rank = movie.select_one("td:nth-child(1) > img")['alt']
+        title = movie.select_one("td.title > div > a").text
+        star = movie.select_one('td.point').text
+        print(rank, title, star)
     '''if title is not None:
         # a의 text를 찍어본다.
         print (a_tag.text)'''

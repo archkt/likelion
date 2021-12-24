@@ -10,7 +10,16 @@ db = client.likelion                      # 'likelion'라는 이름의 db를 만
 #db.users.insert_one({'name':'kay','age':27})
 #db.users.insert_one({'name':'john','age':30})
 
-all_users = list(db.users.find_one({'name': 'bobby'}, {'_id':False}))
-user = db.users.find_one({'name':'bobby'},{'_id':False})
+#all_users = list(db.users.find_one({'name': 'bobby'}, {'_id':False}))
+#user = db.users.find_one({'name':'bobby'},{'_id':False})
+#print(user)
 
-print(user)
+all_users = db.users.find()
+age_19_users = db.users.find({'age':21})
+
+db_car = db.test.find_one({'owner': 'Ryan'}, {'_id': False})
+#print(db_car)
+
+db.users.update_one({'name':'bobby'}, {'$set':{'age':19}})
+test = db.users.find_one({'name':'bobby'})
+print(test)

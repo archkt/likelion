@@ -2,172 +2,220 @@
 <html lang="en">
 
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+    <!-- Webpage Title -->
+    <title>Hello, world!</title>
 
-  
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <title>Selling computer</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
 
-  <!-- style -->
-  <style>
-    .wrap {
-      margin: 10px auto;
-      width: 500px;
-      align-items: center;
-      justify-content: center;
-    }
+    <!-- 구글폰트 -->
+    <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
 
-    * {
-      font-family: 'Cute Font', cursive;
-      font-size: 16px;
-    }
+    <script>
+        function openclose() {
+            if ($('#posting-box').css('display') == 'block') {
+                $('#posting-box').hide();
+                $('#btn-posting-box').text('포스팅 박스 열기')
+            } else {
+                $('#posting-box').show();
+                $('#btn-posting-box').text('포스팅 박스 닫기')
+            }
+        }
 
-    .exchange_rate {
-      color: blue;
-      font-weight: bold;
-    }
-  </style>
-
-  <!-- JS -->
-
-  <script>
-    $(document).ready(function () {
-            $('#orders-box').html('');
+        $(document).ready(function () {
+            $('#cards-box').html('');
             listing();
         });
 
-    function check_submit() {
-      input_name = $('#input_name').val()
-      input_quantity = $('#input_quantity').val()
-      input_address = $('#input_address').val()
-      input_phone = $('#input_phone').val()
-
-      if (!input_name) {
-        alert("이름을 입력하세요")
-      } else if (input_quantity == '수량을 선택하세요') {
-        alert("수량을 입력하세요")
-      } else if (!input_address) {
-        alert("주소를 입력하세요")
-      } else if (!input_phone) {
-        alert("전화번호를 입력하세요")
-      } else {
-        alert("주문이 완료되었습니다.")
-      }
-    };
-
-    function show_exchange() {
-      //ajax
-      $.ajax({
-        type: 'GET',
-        url: 'https://api.manana.kr/exchange/rate.json',
-        data: {},
-        success: function (response) {
-          console.log('hi');
-          $('#exchange_rate').text("달러-원 환율: " + response[1]['rate']);
+        function listing() {
+            $.ajax({
+                type: "GET",
+                url: "/memo",
+                data: {},
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        //alert(response['msg']);
+                        articles = response['articles']
+                        for (i = 0; i < articles.length; i++) {
+                            comment = articles[i]['comment']
+                            desc = articles[i]['description']
+                            image = articles[i]['image']
+                            title = articles[i]['title']
+                            url = articles[i]['url']
+                            make_card(comment, desc, image, title, url)
+                        }
+                    }
+                }
+            })
         }
-      })
-    }
 
+        function make_card(comment, desc, image, title, url) {
+            let temp_html = `<div class="card">
+                              <img class="card-img-top" src="${image}" alt="Card image cap">
+                              <div class="card-body">
+                              <a href="${url}" target="_blank" class="card-title">${title}</a>
+                              <p class="card-text">${desc}</p>
+                              <p class="card-text comment">${comment}</p>
+                              </div>
+                          </div>`;
+            $('#cards-box').append(temp_html);
+        }
 
-  </script>
+        function posting() {
+            let url = $('#posting-url').val()
+            let comment = $('#posting-comment').val()
+
+            $.ajax({
+                type: "POST",
+                url: "/memo",
+                data: { 'form_url': url, 'form_comment': comment },
+                success: function (response) { // 성공하면
+                    if (response['result'] == 'success') {
+                        //alert(response['msg']);
+                        window.location.reload();
+                    } else {
+                        alert("failed to post")
+                    }
+                }
+            })
+        }
+    </script>
+
+    <!-- style -->
+    <style type="text/css">
+        * {
+            font-family: 'Stylish', sans-serif;
+        }
+
+        .wrap {
+            width: 900px;
+            margin: auto;
+        }
+
+        .comment {
+            color: blue;
+            font-weight: bold;
+        }
+
+        .form-post {
+            max-width: 500px;
+            padding: 2rem;
+            margin: 2rem auto;
+            border-color: #e9ecef;
+            border-radius: 0.3rem;
+            border: solid;
+            display: block;
+        }
+
+        #posting-box {
+            display: none;
+        }
+    </style>
 
 </head>
 
-<body onload="show_exchange()">
-
-  <!-- picture with description -->
-  <div>
-
-  </div>
-  <div style="text-align: center;">
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPs2GZpY0ZmSAlSEpIoBNezojwml2X4crfvw&usqp=CAU"
-      class="img-fluid" alt="Responsive image">
-  </div>
-
-  <div id="description" style="text-align: center;">
-    <h1>Selling computer</h1>
-    <h2>price: $35,000</h2>
-    <p>
-    <h5>Yes, you're right. It's thirty-five thousand dollars. I guess you have to sell one of your kidneys.</h5>
-    </p>
-  </div>
-
-
-  <div class="wrap">
-    <!-- exchange rate -->
-    <div>
-      <h5 id="exchange_rate" class='exchange_rate'></h5>
+<body>
+    <div class="wrap">
+        <div class="jumbotron">
+            <h1 class="display-4">나홀로 링크 메모장!</h1>
+            <p class="lead">중요한 링크를 저장해두고, 나중에 볼 수 있는 공간입니다</p>
+            <hr class="my-4">
+            <p class="lead">
+                <a id="btn-posting-box" onclick="openclose()" class="btn btn-primary btn-lg" href="#"
+                    role="button">포스팅박스 열기</a>
+            </p>
+        </div>
+        <div class="form-post" id="posting-box">
+            <div>
+                <div class="form-group">
+                    <label for="exampleFormControlInput1">아티클 URL</label>
+                    <input id="posting-url" class="form-control" placeholder="">
+                </div>
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">간단 코멘트</label>
+                    <textarea id="posting-comment" class="form-control" rows="2"></textarea>
+                </div>
+                <button onclick="posting()" class="btn btn-primary">기사저장</button>
+            </div>
+        </div>
+        <div class="card-columns" id="cards-box">
+            <div class="card">
+                <img class="card-img-top"
+                    src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
+                    alt="Card image cap">
+                <div class="card-body">
+                    <a href="#" class="card-title">여기 기사 제목이 들어가죠</a>
+                    <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
+                    <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img class="card-img-top"
+                    src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
+                    alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">여기 기사 제목이 들어가죠</h5>
+                    <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
+                    <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img class="card-img-top"
+                    src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
+                    alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">여기 기사 제목이 들어가죠</h5>
+                    <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
+                    <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img class="card-img-top"
+                    src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
+                    alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">여기 기사 제목이 들어가죠</h5>
+                    <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
+                    <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img class="card-img-top"
+                    src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
+                    alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">여기 기사 제목이 들어가죠</h5>
+                    <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
+                    <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img class="card-img-top"
+                    src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
+                    alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">여기 기사 제목이 들어가죠</h5>
+                    <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
+                    <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <br>
-    <!-- 주문자 이름 -->
-    <div class="input-group mb-3">
-      <div class="input-group-prepend">
-        <span class="input-group-text" id="basic-addon1">주문자 이름</span>
-      </div>
-      <input id='input_name' type="text" class="form-control" placeholder="Username" aria-label="Username"
-        aria-describedby="basic-addon1">
-    </div>
-
-    <!-- 수량 -->
-    <div class="input-group mb-3">
-      <div class="input-group-prepend">
-        <label class="input-group-text" for="inputGroupSelect01">수량</label>
-      </div>
-      <select class="custom-select" id="input_quantity">
-        <option selected>수량을 선택하세요</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">300</option>
-      </select>
-    </div>
-
-    <!-- 주소 -->
-    <div class="input-group mb-3">
-      <div class="input-group-prepend">
-        <span class="input-group-text" id="basic-addon1">주소</span>
-      </div>
-      <input id="input_address" type="text" class="form-control" placeholder="address" aria-label="Username"
-        aria-describedby="basic-addon1">
-    </div>
-
-    <!-- 전화번호 -->
-    <div class="input-group mb-3">
-      <div class="input-group-prepend">
-        <span class="input-group-text" id="basic-addon1">전화번호</span>
-      </div>
-      <input id="input_phone" type="text" class="form-control" placeholder="phone number" aria-label="Username"
-        aria-describedby="basic-addon1">
-    </div>
-
-    <!-- submit button-->
-    <input style="text-align: center;" class="btn btn-primary" type="submit" value="Submit" onclick="check_submit()">
-
-  </div>
-
-
-  <!-- Optional JavaScript -->
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-    crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </body>
 
 </html>

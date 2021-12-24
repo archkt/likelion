@@ -52,19 +52,21 @@
                 $('#review').focus()
             } else {
                 $.ajax({
-                type: 'POST', // 타입을 작성합니다.
-                url: '/reviews', // url을 작성합니다.
-                data: { 'title_give': title,
+                    type: 'POST', // 타입을 작성합니다.
+                    url: '/reviews', // url을 작성합니다.
+                    data: {
+                        'title_give': title,
                         'author_give': author,
-                        'review_give': review }, // data를 작성합니다. },
-                success: function (response) {
-                    if (response['result'] == 'success') {
-                        alert(response['msg']);
+                        'review_give': review
+                    }, // data를 작성합니다. },
+                    success: function (response) {
+                        if (response['result'] == 'success') {
+                            alert(response['msg']);
 
-                        window.location.reload();
+                            window.location.reload();
+                        }
                     }
-                }
-            });
+                });
             }
 
         }
@@ -81,12 +83,28 @@
                     if (response['result'] == 'success') {
                         alert(response['msg']);
                         // 2. 성공했을 때 리뷰를 올바르게 화면에 나타내기
-                        
+                        reviews = response['reviews'];
+                        for (i = 0; i < reviews.length; i++) {
+                            title = reviews[i]['title']
+                            author = reviews[i]['author']
+                            review = reviews[i]['review']
+                            
+                            make_card(title, author, review)
+                        }
                     } else {
                         alert('리뷰를 받아오지 못했습니다');
                     }
                 }
             });
+        }
+
+        function make_card(title, author, review) {
+            let temp_html = `<tr>
+                        <td>${title}</td>
+                        <td>${author}</td>
+                        <td>${review}</td>
+                    </tr>`;
+            $('#orders-box').append(temp_html);
         }
 
         function is_long(obj) {

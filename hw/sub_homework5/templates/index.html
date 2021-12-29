@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+
+
+
+  <title>Selling computer</title>
+
+
+  <!-- style -->
+  <style>
+    .wrap {
+      margin: 10px auto;
+      width: 500px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    * {
+      font-family: 'Cute Font', cursive;
+      font-size: 16px;
+    }
+
+    .exchange_rate {
+      color: blue;
+      font-weight: bold;
+    }
+  </style>
+
+  <!-- JS -->
+
+  <script>
+    $(document).ready(function () {
+      $('#orders-box').html('');
+      listing();
+    });
+    
+    function listing() {
+      
+    }
+
+    function check_submit() {
+      input_name = $('#input_name').val()
+      input_quantity = $('#input_quantity').val()
+      input_address = $('#input_address').val()
+      input_phone = $('#input_phone').val()
+
+      if (!input_name) {
+        alert("이름을 입력하세요")
+        $('#input_name').focus()
+      } else if (input_quantity == '수량을 선택하세요') {
+        alert("수량을 입력하세요")
+        $('#input_quantity').focus()
+      } else if (!input_address) {
+        alert("주소를 입력하세요")
+        $('#input_address').focus()
+      } else if (!input_phone) {
+        alert("전화번호를 입력하세요")
+        $('#input_phone').focus()
+      } else {
+        submit(input_name, input_quantity, input_address, input_phone)
+      }
+    };
+
+    function submit(name, quantity, address, phone) {
+      // Ajax call
+      $.ajax({
+        'type': 'POST',
+        'url': '/submit',
+        'data': { 'form_name': name, 'form_quantity': quantity, 'form_address': address, 'form_phone': phone },
+        success: function (response) {
+          if (response['result'] == 'success') {
+            alert('success')
+            window.location.reload();
+          } else {
+            alert("failed to post")
+          }
+        }
+      })
+    }
+
+    function show_exchange() {
+      //ajax
+      $.ajax({
+        type: 'GET',
+        url: 'https://api.manana.kr/exchange/rate.json',
+        data: {},
+        success: function (response) {
+          console.log('hi');
+          $('#exchange_rate').text("달러-원 환율: " + response[1]['rate']);
+        }
+      })
+    }
+
+
+  </script>
+
+</head>
+
+<body onload="show_exchange()">
+
+  <!-- picture with description -->
+  <div>
+
+  </div>
+  <div style="text-align: center;">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPs2GZpY0ZmSAlSEpIoBNezojwml2X4crfvw&usqp=CAU"
+      class="img-fluid" alt="Responsive image">
+  </div>
+
+  <div id="description" style="text-align: center;">
+    <h1>Selling computer</h1>
+    <h2>price: $35,000</h2>
+    <p>
+    <h5>Yes, you're right. It's thirty-five thousand dollars. I guess you have to sell one of your kidneys.</h5>
+    </p>
+  </div>
+
+
+  <div class="wrap">
+    <!-- exchange rate -->
+    <div>
+      <h5 id="exchange_rate" class='exchange_rate'></h5>
+    </div>
+
+    <br>
+    <!-- 주문자 이름 -->
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1">주문자 이름</span>
+      </div>
+      <input id='input_name' type="text" class="form-control" placeholder="Username" aria-label="Username"
+        aria-describedby="basic-addon1">
+    </div>
+
+    <!-- 수량 -->
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="inputGroupSelect01">수량</label>
+      </div>
+      <select class="custom-select" id="input_quantity">
+        <option selected>수량을 선택하세요</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">300</option>
+      </select>
+    </div>
+
+    <!-- 주소 -->
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1">주소</span>
+      </div>
+      <input id="input_address" type="text" class="form-control" placeholder="address" aria-label="Username"
+        aria-describedby="basic-addon1">
+    </div>
+
+    <!-- 전화번호 -->
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1">전화번호</span>
+      </div>
+      <input id="input_phone" type="text" class="form-control" placeholder="phone number" aria-label="Username"
+        aria-describedby="basic-addon1">
+    </div>
+
+    <!-- submit button-->
+    <input style="text-align: center;" class="btn btn-primary" type="submit" value="Submit" onclick="check_submit()">
+
+  </div>
+
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</body>
+
+</html>

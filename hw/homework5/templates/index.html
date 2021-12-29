@@ -8,6 +8,7 @@
     <!-- import bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <title>Spamming Yelp</title>
     <style>
@@ -33,9 +34,22 @@
     </style>
     <script>
         $(document).ready(function () {
-            $('#input-text').text("");
+            
         });
-        
+
+        function submit_text() {
+            $.ajax({
+                type: "POST",
+                url: '/',
+                data: { 'input_text': $('#input-text').val() },
+                success: function (response) {
+                    // {'place_holder':sample, 'generated_text':generated_text, 'msg':'POST call success'}
+                    console.log(response['msg'])
+                    window.location.reload();
+                }
+            })
+        }
+
     </script>
 </head>
 
@@ -51,16 +65,15 @@
                     <label for="input-text">
                         <h4>Input text</h4>
                     </label>
-                    <textarea class="form-control" id="input-text" rows="10" placeholder="{{place_holder}}"></textarea>
+                    <textarea class="form-control" name="input-text" id="input-text" rows="10"
+                        placeholder="{{place_holder}}"></textarea>
                 </div>
-                <button id="btnRollBack" type="button" class="btn btn-primary">Generate</button>
+                <button id="btnRollBack" type="button" class="btn btn-primary" onclick=submit_text()>Generate</button>
             </div>
 
             <div class="col-6">
-                <div data-spy="scroll" data-target="#navbar-example3" data-offset="0">
-                    <h4>Generated text</h4>
-                    <p id='generated-text'>{{generated_text}}</p>
-                </div>
+                <h4>Generated text</h4>
+                <p id='generated-text'>{{generated_text}}</p>
             </div>
         </div>
     </div>
@@ -75,6 +88,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 </body>
 
 </html>

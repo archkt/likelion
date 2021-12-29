@@ -8,7 +8,7 @@ SAMPLE = "Write a restaurant review based on these notes:\n\nexample:\nName: The
 
 @app.route('/', methods=['GET'])
 def home():
-    return render_template('index.html')
+    return render_template('index.html', place_holder=SAMPLE)
 
 @app.route('/', methods=['POST'])
 def generate():
@@ -19,7 +19,8 @@ def generate():
         generated_text = generate_text(SAMPLE)
     else:
         generated_text = generate_text(input_text)
-        
+
+    print(input_text)        
     return jsonify({'place_holder':SAMPLE, 'generated_text':generated_text, 'msg':'POST call success'})
 
 if __name__ == '__main__':

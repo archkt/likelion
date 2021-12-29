@@ -31,10 +31,18 @@
             position: absolute;
             right: 1rem;
         }
+
+        .bottom {
+            margin-top: 3rem;
+        }
+
+        .template {
+            color: grey
+        }
     </style>
     <script>
         $(document).ready(function () {
-            
+            $('#generated-text').text("")
         });
 
         function submit_text() {
@@ -45,7 +53,9 @@
                 success: function (response) {
                     // {'place_holder':sample, 'generated_text':generated_text, 'msg':'POST call success'}
                     console.log(response['msg'])
-                    window.location.reload();
+                    text = response['generated_text']
+                    $('#generated-text').text(text)
+
                 }
             })
         }
@@ -68,12 +78,34 @@
                     <textarea class="form-control" name="input-text" id="input-text" rows="10"
                         placeholder="{{place_holder}}"></textarea>
                 </div>
-                <button id="btnRollBack" type="button" class="btn btn-primary" onclick=submit_text()>Generate</button>
             </div>
 
             <div class="col-6">
                 <h4>Generated text</h4>
-                <p id='generated-text'>{{generated_text}}</p>
+                <p id='generated-text'></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <button id="btnRollBack" type="button" class="btn btn-primary" onclick=submit_text()>Generate</button>
+            </div>
+            <div class="col-6">
+
+            </div>
+        </div>
+        <div class="row bottom">
+            <div class="col-6">
+                <p>
+                <h4>Template example for better result:</h4>
+                <br>
+                <span class="template">
+                    Write a restaurant review based on these notes:<br><br>
+                    Name: [restaurant name]<br>
+                    [keyword1], [keyword2], ...<br>
+                    Review:
+                </span>
+
+                </p>
             </div>
         </div>
     </div>
